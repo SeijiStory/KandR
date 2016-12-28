@@ -7,13 +7,6 @@ int main(int argc, char **argv)
 	size_t i = 1;
 	int c;
 
-	/*
-	for (i = 0; i < 10; ++i)
-		printf("|---l---");
-	putchar('\n');
-	i = 1;
-	*/
-
 	while ((c = getchar()) > EOF) {
 		unsigned char j;
 		switch (c) {
@@ -34,5 +27,3 @@ int main(int argc, char **argv)
 	}
 	return 0;
 }
-
-// A wee		little test     line m8
