@@ -1,18 +1,58 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-char *decomment(char *str);
+#define SIZE 1024
+
 int main(int argc, char **argv)
 {
-	size_t n = 0;
-	char *line = NULL;
-	char *nexthalf = NULL;
-	char incomment = 0;
+	int c;
+	char linecomment = 0;
+	char multicomment = 0;
 
-	while (getline(&line, &n, stdin) > -1) {
-		size_t i;
-		for (i = 0; line[i] != '\n' && line[i] != '\0'; ++i) {
-			if (line[i] == '/');
+	while ((c = getchar()) > EOF) {
+		int next;
+		switch (c) {
+		case '/':
+			next = getchar(); // This is an endline comment
+			switch (next) {
+			case '/':
+				linecomment = 1; /* This here is a multi-line
+						  * comment, to just take
+						  * up a lot of space!
+						  */ break;
+			case '*':
+				multicomment = 1;
+				break;
+			default:
+				ungetc(next, stdin);
+				putchar(c);
+				break;
+			}
+			break;
+		case '\n':
+			if (linecomment)
+				linecomment = 0;
+			if (!linecomment & !multicomment)
+				putchar(c);
+			break;
+		case '*':
+			next = getchar();
+			if (next == '/') {
+				multicomment = 0;
+			} else {
+				ungetc(next, stdin);
+				if (!linecomment & !multicomment)
+					putchar(c);
+			}
+			break;
+		default:
+			if (linecomment | multicomment)
+				continue;
+			else
+				putchar(c);
 		}
 	}
 }
+
+/* I like to use this source code as a test for the program */
